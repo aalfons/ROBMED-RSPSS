@@ -1,0 +1,4 @@
+ROBMED
+Y = dependent variable
+X = independent variable
+M = hypothesized mediators
