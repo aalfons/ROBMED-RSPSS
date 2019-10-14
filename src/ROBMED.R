@@ -26,6 +26,10 @@ Run <- function(args){
                      islist = FALSE, var = "conf"),
     spsspkg.Template(kwd = "BOOT", subc = "OPTIONS", ktype = "int",
                      islist = FALSE, var = "boot"),
+    spsspkg.Template(kwd = "EFFICIENCY", subc = "OPTIONS", ktype = "int",
+                     islist = FALSE, var = "efficiency"),
+    spsspkg.Template(kwd = "MAXITER", subc = "OPTIONS", ktype = "int",
+                     islist = FALSE, var = "maxiter"),
     spsspkg.Template(kwd = "SEED", subc = "OPTIONS", ktype = "int",
                      islist = FALSE, var = "seed"),
     spsspkg.Template(kwd = "RNG", subc = "OPTIONS", ktype = "str",
@@ -42,7 +46,8 @@ Run <- function(args){
 ## R package robmed
 
 run_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
-                       seed = NULL, rng = "current") {
+                       efficiency = 85, maxiter = 10000, seed = NULL,
+                       rng = "current") {
 
   # check if package robmed is available
   tryCatch(library("robmed"), error = function(e) {
@@ -59,6 +64,8 @@ run_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
 
   # translate options
   level <- conf / 100
+  control <- reg_control(efficiency = efficiency / 100,
+                         max_iterations = maxiter)
   switch_rng <- rng == "compatibility"
   rng_version <- "3.5.3"
 
@@ -67,7 +74,7 @@ run_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
     if (switch_rng) RNGversion(rng_version)
     if (!is.null(seed)) set.seed(seed)
     robust_boot <- robmed(data, x = x, y = y, m = m, covariates = covariates,
-                          R = boot, level = level)
+                          R = boot, level = level, control = control)
     summary(robust_boot)
   }, error = function(e) stop(e))
 

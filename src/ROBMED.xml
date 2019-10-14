@@ -13,6 +13,8 @@
   <Subcommand Name="OPTIONS" Ocurrence="Optional">
     <Parameter Name="CONF" ParameterType="Integer" />
     <Parameter Name="BOOT" ParameterType="Integer" />
+    <Parameter Name="EFFICIENCY" ParameterType="Integer" />
+    <Parameter Name="MAXITER" ParameterType="Integer" />
     <Parameter Name="SEED" ParameterType="Integer" />
     <Parameter Name="RNG" ParameterType="Keyword">
       <EnumValue Name="CURRENT"/>
