@@ -2,3 +2,11 @@ ROBMED
 Y = dependent variable
 X = independent variable
 M = hypothesized mediators
+COV = optional covariates
+/OPTIONS CONF = confidence level
+         BOOT = number of bootstrap samples
+         EFFICIENCY = efficiency of the MM-estimator
+         MAXITER = maximum number of itereations for MM-estimator
+         SEED = seed of the random number generator
+         RNG = version of the random number generator
+/HELP
