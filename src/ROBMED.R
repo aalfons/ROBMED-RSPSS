@@ -27,7 +27,9 @@ Run <- function(args){
     spsspkg.Template(kwd = "BOOT", subc = "OPTIONS", ktype = "int",
                      islist = FALSE, var = "boot"),
     spsspkg.Template(kwd = "SEED", subc = "OPTIONS", ktype = "int",
-                     islist = FALSE, var = "seed")
+                     islist = FALSE, var = "seed"),
+    spsspkg.Template(kwd = "RNG", subc = "OPTIONS", ktype = "str",
+                     islist = FALSE, var = "rng")
   ))
 
   # show help or run R code
@@ -40,7 +42,7 @@ Run <- function(args){
 ## R package robmed
 
 run_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
-                       seed = NULL) {
+                       seed = NULL, rng = "current") {
 
   # check if package robmed is available
   tryCatch(library("robmed"), error = function(e) {
@@ -57,9 +59,12 @@ run_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
 
   # translate options
   level <- conf / 100
+  switch_rng <- rng == "compatibility"
+  rng_version <- "3.5.3"
 
   # run function robmed()
   result <- tryCatch({
+    if (switch_rng) RNGversion(rng_version)
     if (!is.null(seed)) set.seed(seed)
     robust_boot <- robmed(data, x = x, y = y, m = m, covariates = covariates,
                           R = boot, level = level)

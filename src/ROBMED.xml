@@ -14,6 +14,10 @@
     <Parameter Name="CONF" ParameterType="Integer" />
     <Parameter Name="BOOT" ParameterType="Integer" />
     <Parameter Name="SEED" ParameterType="Integer" />
+    <Parameter Name="RNG" ParameterType="Keyword">
+      <EnumValue Name="CURRENT"/>
+      <EnumValue Name="COMPATIBILITY"/>
+    </Parameter>
   </Subcommand>
   <Subcommand Name="HELP" Occurrence="Optional" />
 </Command>
