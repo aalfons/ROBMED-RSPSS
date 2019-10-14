@@ -19,7 +19,9 @@ Run <- function(args){
     spsspkg.Template(kwd = "X", subc = "", ktype = "existingvarlist",
                      islist = FALSE, var = "x"),
     spsspkg.Template(kwd = "M", subc = "", ktype = "existingvarlist",
-                     islist = TRUE, var = "m")
+                     islist = TRUE, var = "m"),
+    spsspkg.Template(kwd = "COV", subc = "", ktype = "varname",
+                     islist = TRUE, var = "covariates")
   ))
 
   # show help or run R code
@@ -31,7 +33,7 @@ Run <- function(args){
 ## function to take objects parsed by SPSS and call function robmed() from the
 ## R package robmed
 
-run_robmed <- function(y, x, m) {
+run_robmed <- function(y, x, m, covariates = NULL) {
 
   # check if package robmed is available
   tryCatch(library("robmed"), error = function(e) {
@@ -41,13 +43,14 @@ run_robmed <- function(y, x, m) {
 
   # get variables from active data set
   m <- unlist(m)
-  variables <- c(x, y, m)
+  covariates <- unlist(covariates)
+  variables <- c(x, y, m, covariates)
   data <- spssdata.GetDataFromSPSS(variables, missingValueToNA = TRUE,
                                    factorMode = "labels")
 
   # run function robmed()
   result <- tryCatch({
-    robust_boot <- robmed(data, x = x, y = y, m = m)
+    robust_boot <- robmed(data, x = x, y = y, m = m, covariates = covariates)
     summary(robust_boot)
   }, error = function(e) stop(e))
 

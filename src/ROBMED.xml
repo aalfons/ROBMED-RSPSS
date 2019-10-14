@@ -8,6 +8,7 @@
     <Parameter Name="Y" ParameterType="VariableName"/>
     <Parameter Name="X" ParameterType="VariableName"/>
     <Parameter Name="M" ParameterType="VariableNameList"/>
+    <Parameter Name="COV" ParameterType="VariableNameList"/>
   </Subcommand>
   <Subcommand Name="HELP" Occurrence="Optional" />
 </Command>
