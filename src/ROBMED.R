@@ -21,7 +21,13 @@ Run <- function(args){
     spsspkg.Template(kwd = "M", subc = "", ktype = "existingvarlist",
                      islist = TRUE, var = "m"),
     spsspkg.Template(kwd = "COV", subc = "", ktype = "varname",
-                     islist = TRUE, var = "covariates")
+                     islist = TRUE, var = "covariates"),
+    spsspkg.Template(kwd = "CONF", subc = "OPTIONS", ktype = "int",
+                     islist = FALSE, var = "conf"),
+    spsspkg.Template(kwd = "BOOT", subc = "OPTIONS", ktype = "int",
+                     islist = FALSE, var = "boot"),
+    spsspkg.Template(kwd = "SEED", subc = "OPTIONS", ktype = "int",
+                     islist = FALSE, var = "seed")
   ))
 
   # show help or run R code
@@ -33,7 +39,8 @@ Run <- function(args){
 ## function to take objects parsed by SPSS and call function robmed() from the
 ## R package robmed
 
-run_robmed <- function(y, x, m, covariates = NULL) {
+run_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
+                       seed = NULL) {
 
   # check if package robmed is available
   tryCatch(library("robmed"), error = function(e) {
@@ -48,9 +55,14 @@ run_robmed <- function(y, x, m, covariates = NULL) {
   data <- spssdata.GetDataFromSPSS(variables, missingValueToNA = TRUE,
                                    factorMode = "labels")
 
+  # translate options
+  level <- conf / 100
+
   # run function robmed()
   result <- tryCatch({
-    robust_boot <- robmed(data, x = x, y = y, m = m, covariates = covariates)
+    if (!is.null(seed)) set.seed(seed)
+    robust_boot <- robmed(data, x = x, y = y, m = m, covariates = covariates,
+                          R = boot, level = level)
     summary(robust_boot)
   }, error = function(e) stop(e))
 
