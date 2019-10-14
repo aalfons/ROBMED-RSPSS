@@ -33,7 +33,9 @@ Run <- function(args){
     spsspkg.Template(kwd = "SEED", subc = "OPTIONS", ktype = "int",
                      islist = FALSE, var = "seed"),
     spsspkg.Template(kwd = "RNG", subc = "OPTIONS", ktype = "str",
-                     islist = FALSE, var = "rng")
+                     islist = FALSE, var = "rng"),
+    spsspkg.Template(kwd = "INFERENCE", subc = "OPTIONS", ktype = "str",
+                     islist = FALSE, var = "inference")
   ))
 
   # show help or run R code
@@ -47,7 +49,7 @@ Run <- function(args){
 
 run_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
                        efficiency = 85, maxiter = 10000, seed = NULL,
-                       rng = "current") {
+                       rng = "current", inference = "boot") {
 
   # check if package robmed is available
   tryCatch(library("robmed"), error = function(e) {
@@ -75,7 +77,7 @@ run_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
     if (!is.null(seed)) set.seed(seed)
     robust_boot <- robmed(data, x = x, y = y, m = m, covariates = covariates,
                           R = boot, level = level, control = control)
-    summary(robust_boot)
+    summary(robust_boot, other = inference)
   }, error = function(e) stop(e))
 
   # show output
