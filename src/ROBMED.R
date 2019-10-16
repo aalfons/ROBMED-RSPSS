@@ -157,13 +157,16 @@ print_SPSS.summary_reg_fit_mediation <- function(x, outline, ...) {
   print_SPSS(x$fit_ymx, response = x$y)
 
   ## print summary of total and direct effects of x on y
+  have_old_version <- packageVersion("robmed") < "0.5.0"
   # total effect
-  c_prime <- replace_dimnames(x$c_prime)
-  spsspivottable.Display(c_prime, title = "Total Effect of X on Y",
+  total <- if (have_old_version) x$c_prime else x$total
+  total <- replace_dimnames(total)
+  spsspivottable.Display(total, title = "Total Effect of X on Y",
                          outline = outline, hiderowdimlabel = FALSE)
   # direct effect
-  c <- replace_dimnames(x$c)
-  spsspivottable.Display(c, title = "Direct Effect of X on Y",
+  direct <- if (have_old_version) x$c else x$direct
+  direct <- replace_dimnames(direct)
+  spsspivottable.Display(direct, title = "Direct Effect of X on Y",
                          outline = outline, hiderowdimlabel = FALSE)
 
   ## return NULL invisibly
