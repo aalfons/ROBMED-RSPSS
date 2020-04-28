@@ -111,6 +111,16 @@ print_SPSS.summary_lmrob <- function(x, response, ...) {
   coefficients <- replace_dimnames(x$coefficients)
   spsspivottable.Display(coefficients, title = "Coefficients",
                          outline = outline, hiderowdimlabel = FALSE)
+  # print information on outliers (only available in summary from 0.7.0 onwards)
+  if (packageVersion("robmed") >= "0.7.0") {
+    outlier_info <- robmed:::get_outlier_info(x$outliers)
+    if (is.null(outlier_info$indices)) msg <- outlier_info$msg
+    else {
+      indices_to_print <- paste(outlier_info$indices, collapse = ", ")
+      msg <- paste0(outlier_info$msg, indices_to_print, "\n", sep = "")
+    }
+    spss.TextBlock("Robustness weights", msg, outline = outline)
+  }
   # return NULL invisibly
   invisible()
 }
