@@ -21,5 +21,8 @@
       <EnumValue Name="COMPATIBILITY"/>
     </Parameter>
   </Subcommand>
+  <Subcommand Name="PLOTS" Ocurrence="Optional">
+    <Parameter Name="WEIGHT" ParameterType="Integer" />
+  </Subcommand>
   <Subcommand Name="HELP" Occurrence="Optional" />
 </Command>

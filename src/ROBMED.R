@@ -33,7 +33,9 @@ Run <- function(args){
     spsspkg.Template(kwd = "SEED", subc = "OPTIONS", ktype = "int",
                      islist = FALSE, var = "seed"),
     spsspkg.Template(kwd = "RNG", subc = "OPTIONS", ktype = "str",
-                     islist = FALSE, var = "rng")
+                     islist = FALSE, var = "rng"),
+    spsspkg.Template(kwd = "WEIGHT", subc = "PLOTS", ktype = "int",
+                     islist = FALSE, var = "plot")
   ))
 
   # show help or run R code
@@ -47,11 +49,11 @@ Run <- function(args){
 
 run_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
                        efficiency = 85, maxiter = 10000, seed = NULL,
-                       rng = "current") {
+                       rng = "current", plot = 1) {
 
   # check if package robmed is available
   tryCatch(library("robmed"), error = function(e) {
-    stop("The R package robmed is required but could not be loaded.",
+    stop("The R package 'robmed' is required but could not be loaded.",
          call. = FALSE)
   })
 
@@ -69,20 +71,30 @@ run_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
   switch_rng <- rng == "compatibility"
   rng_version <- "3.5.3"
 
+  # translate plot options
+  plot <- isTRUE(as.logical(plot))
+  if (plot && packageVersion("robmed") < "0.8.0") {
+    warning("Diagnostic plot not available in this version of the R package ",
+            "'robmed'.\nPlease update to the latest version.", call. = FALSE)
+  }
+
   # run function robmed()
   result <- tryCatch({
     if (switch_rng) RNGversion(rng_version)
     if (!is.null(seed)) set.seed(seed)
     robust_boot <- robmed(data, x = x, y = y, m = m, covariates = covariates,
                           R = boot, level = level, control = control)
-    summary(robust_boot)
+    summary(robust_boot, plot = plot)
   }, error = function(e) stop(e))
 
   # show output
   print_SPSS(result)
 
   # clean up
-  result <- tryCatch(rm(list = ls()), warning = function(e) NULL)
+  tryCatch(rm(list = ls()), warning = function(w) NULL)
+
+  # return NULL invisibly
+  invisible()
 
 }
 
@@ -125,11 +137,10 @@ print_SPSS.summary_lmrob <- function(x, response, ...) {
   invisible()
 }
 
-
 # print summary of a mediation model fit
 print_SPSS.summary_reg_fit_mediation <- function(x, outline, ...) {
 
-  # initializations
+  ## initializations
   p_m <- length(x$m)
   have_covariates <- length(x$covariates) > 0L
 
@@ -183,7 +194,6 @@ print_SPSS.summary_reg_fit_mediation <- function(x, outline, ...) {
   invisible()
 }
 
-
 # print results of a bootstrap test for indirect effect
 print_SPSS.boot_test_mediation <- function(x, outline, ...) {
   # initializations
@@ -210,7 +220,7 @@ print_SPSS.boot_test_mediation <- function(x, outline, ...) {
   note_boot <- sprintf("Number of bootstrap replicates: %d", x$R)
   notes <- paste(note_ci, note_boot, sep = "\n\n")
   spss.TextBlock("Analysis Notes", notes)
-  ## return NULL invisibly
+  # return NULL invisibly
   invisible()
 }
 
@@ -224,9 +234,47 @@ print_SPSS.summary_test_mediation <- function(x, ...) {
   print_SPSS(x$summary, outline = outline)
   # print summary of indirect effect
   print_SPSS(x$object, outline = outline)
+  # if requested, print diagnostic plot
+  p <- x$plot
+  if (!is.null(p)) print_SPSS(p)
   # stop output
   spsspkg.EndProcedure()
-  ## return NULL invisibly
+  # return NULL invisibly
+  invisible()
+}
+
+# print ggplot2 graphics (diagnostic plot)
+print_SPSS.ggplot <- function(x, ...) {
+  # The following code does not work properly under MacOS because SPSS requires
+  # X11 for this, which is no longer included with MacOS.  Some users might
+  # have XQuartz installed, but we can't rely on this.  It might work on
+  # Windows, but this needs to be tested first before we can include it in the
+  # SPSS extension.
+  # -----
+  # spssRGraphics.SetGraphicsLabel("Diagnostic plot of regression weights")
+  # print(x)
+  # -----
+  # As a workaround, a temporary file containing the plot is created, which is
+  # then displayed in the SPSS output with spssRGraphics.Submit().  According
+  # to the documentation, this function only supports PNG, JPG and BMP files.
+  # -----
+  file <- "tmp_weight_plot.png"
+  x <- x +
+    labs(title = "Diagnostic plot of regression weights") +
+    theme(axis.title = element_text(size = 13),
+          axis.text = element_text(size = 12),
+          legend.text = element_text(size = 12),
+          plot.title = element_text(face = "bold", size = 18),
+          plot.title.position = "plot",
+          strip.text = element_text(size = 13))
+  png(filename = file, width = 540, height = 600)
+  print(x)
+  dev.off()
+  spssRGraphics.Submit(file)
+  tryCatch(file.remove(file), warning = function(w) NULL,
+           error = function(e) NULL)
+  # -----
+  # return NULL invisibly
   invisible()
 }
 

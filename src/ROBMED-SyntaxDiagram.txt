@@ -9,4 +9,5 @@ COV = optional covariates
          MAXITER = maximum number of itereations for MM-estimator
          SEED = seed of the random number generator
          RNG = version of the random number generator
+/PLOTS WEIGHT = whether to create a diagnostic plot of regression weights
 /HELP
