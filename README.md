@@ -14,7 +14,7 @@ Alfons, A., Ates, N.Y., & Groenen, P.J.F. (2021). A Robust Bootstrap Test for
 Mediation Analysis. *Organizational Research Methods*. DOI [10.1177/1094428121999096](https://doi.org/10.1177/1094428121999096).
 
 
-## Installing the `SPSS` `R` extension bundle
+## Installing the extension bundle
 
 Before you can install the extension bundle `ROBMED`, you need to install [`R`](https://cran.r-project.org/) and the [`R` plug-in for `SPSS`](https://github.com/IBMPredictiveAnalytics/R_Essentials_Statistics/releases).  Make sure that you install the version of `R` that is required for your version of `SPSS`.  Starting with `SPSS` version 28.0, `R` and the integration plug-in are automatically installed with `SPSS`.
 
@@ -27,7 +27,7 @@ Afterwards download the file [`ROBMED.spe`](https://github.com/aalfons/ROBMED-RS
 2. In the **Open an Extension Bundle** dialog, select the file `ROBMED.spe` and click **Open**.
 
 
-## Using the `SPSS` `R` extension bundle
+## Using the extension bundle
 
 To run the robust boostrap test ROBMED for mediation analysis:
 
@@ -65,14 +65,8 @@ Additional options can be entered by clicking on the **Options** button.  This o
 If you experience any bugs or issues or if you have any suggestions for additional features, please submit an issue via the *Issues* tab of this repository.  Please have a look at existing issues first to see if your problem for feature request has already been discussed.
 
 
-## Contribute to the package
-
-If you want to contribute to the package, you can fork this repository
-and create a pull request after implementing the desired functionality.
-
-
 ## Ask for help
 
-If you need help using the package, or if you are interested in
+If you need help using the extension bundle, or if you are interested in
 collaborations related to this project, please get in touch with the
-[package maintainer](https://personal.eur.nl/alfons/).
+[maintainer](https://personal.eur.nl/alfons/).
