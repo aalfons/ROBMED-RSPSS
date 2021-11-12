@@ -116,7 +116,7 @@ print_SPSS.summary_lmrob <- function(x, response, ...) {
                         "Robust F" = x$F_test$statistic,
                         "df1" = x$F_test$df[1], "df2" = x$F_test$df[2],
                         "Sig." = x$F_test$p_value,
-                        check.names = FALSE)
+                        check.names = FALSE, stringsAsFactors = FALSE)
   spsspivottable.Display(summary, title = "Model Summary", outline = outline,
                          hiderowdimlabel = TRUE)
   # print coefficient matrix
