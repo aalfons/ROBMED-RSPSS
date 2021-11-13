@@ -1,7 +1,68 @@
-# --------------------------------------
+# ------------------------------------
 # Author: Andreas Alfons
-#         Erasmus Universiteit Rotterdam
-# --------------------------------------
+#         Erasmus University Rotterdam
+# ------------------------------------
+
+
+# Documentation and online help text
+help_text <- "
+Command ROBMED requires the R Integration Plug-in and the R package 'robmed'.
+
+ROBMED Y=dependent variable X=independent variable M=mediators
+      [COV=control variables]
+ [/OPTIONS [CONF=integer value] [BOOT=integer value]
+           [EFFICIENCY=integer value] [MAXITER=integer value]
+           [SEED=integer value] [RNG={CURRENT}]      ]
+                                     {COMPATIBILITY}
+ [/PLOTS [WEIGHT = {0}] ]
+                   {1}
+
+ROBMED /HELP prints this information and does nothing else.
+
+Example:
+ROBMED Y=TeamCommitment X=ValueDiversity M=TaskConflict
+  /OPTIONS CONF=95 BOOT=5000
+           EFFICIENCY=85 MAXITER=10000
+           SEED=20211117 RNG=CURRENT
+  /PLOTS WEIGHT=1.
+
+CONF:  integer value for the desired confidence level of the bootstrap
+       confidence interval of the indirect effect.  The default is 95 for
+       a 95% confidence level.
+
+BOOT:  integer value for the desired number of bootstrap samples.  The default
+       is 5000 samples.  For lower values, the obtained confidence intervals
+       may not be very accurate, as the limits are based on percentiles of the
+       bootstrap distribution.
+
+EFFICIENCY:  integer value for the desired efficiency (as percentage) of the
+             MM-estimator under normally distributed error terms.  Higher
+             efficiency may increase the bias under deviations from normality,
+             although this bias will still be bounded.  Possible values are
+             80, 85 (the default), 90 or 95.
+
+MAXITER:  integer value for the maximum number of iterations in the algorithm
+          of the robust regression estimator.  If this number of iterations is
+          reached, the algorithm will terminate without convergence.  The
+          default is a maximum of 10000 iterations.  In practice, far fewer
+          iterations should be necessary for convergence.
+
+SEED:  optional integer value to be used as seed for the random number
+       generator.  Setting a seed is necessary for reproducibility of
+       results.
+
+RNG:  version of the random number generator to be used.  In R version 3.6.0,
+      the default random number generator was improved slightly, so the purpose
+      of this option is to allow reproducibility of results obtained with R
+      version 3.5.3 or earlier.  Possible values are CURRENT (the default) for
+      the random number generator of the R version currently used, or
+      COMPATIBILITY with R 3.5.3.  Note that this option has no effect if R
+      version 3.5.3 or earlier is used.
+
+WEIGHT:  set to 1 to create a diagnostic plot of the weights from the robust
+         regressions, and to 0 otherwise. This plot allows to easily detect
+         deviations from normality assumptions such as skewness or heavy tails.
+"
 
 
 # SPSS R extension requires a function Run() with only one argument 'args' to
@@ -39,15 +100,15 @@ Run <- function(args){
   ))
 
   # show help or run R code
-  if ("HELP" %in% attr(args, "names")) writeLines("Help not yet available.")
-  else result <- spsspkg.processcmd(oobj, args, "run_robmed")
+  if ("HELP" %in% attr(args, "names")) writeLines(help_text)
+  else result <- spsspkg.processcmd(oobj, args, "call_robmed")
 }
 
 
 ## function to take objects parsed by SPSS and call function robmed() from the
 ## R package robmed
 
-run_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
+call_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
                        efficiency = 85, maxiter = 10000, seed = NULL,
                        rng = "current", plot = 1) {
 

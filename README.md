@@ -51,13 +51,13 @@ Other elements of the `ROBMED` dialog can be used to further customize your anal
 
 Additional options can be entered by clicking on the **Options** button.  This opens a subdialog that allows to customize the MM-estimator of regression as well as the random number generator.
 
-* **Efficiency at the normal distribution**: This allows to set the desired efficiency of the MM-estimator under normally distributed error terms.  Higher efficiency may increase the bias under deviations such as outliers or heavily tailed errors, although this bias will still be bounded (unlike OLS estimation, for which the bias can become arbitrarily large under such deviations from the model assumptions).  Possible values are 80%, 85% (the default), 90% or 95% efficiency.
+* **Efficiency at the normal distribution**: This allows to set the desired efficiency of the MM-estimator under normally distributed error terms.  Higher efficiency may increase the bias under deviations from normality, although this bias will still be bounded (unlike OLS estimation, for which the bias can become arbitrarily large under such deviations from the model assumptions).  Possible values are 80%, 85% (the default), 90% or 95% efficiency.
 
 * **Maximum number of iterations**:  The computation of the MM-estimator of regression requires an iterative algorithm.  Enter an integer between 1000 and 1000000 for the maximum number of iterations to be executed in this algorithm.  If this number of iterations is reached, the algorithm will terminate *without convergence*.  The default is a maximum of 10000 iterations.  In practice, far fewer iterations should be necessary for convergence.
 
 * **Seed**:  Optionally, enter an integer to be used as seed for the random number generator.  It is important to note that setting a seed is necessary for reproducibility of results.
 
-* **Version**:  This allows to set the version of the random number generator to be used.  In `R` version 3.6.0, the default random number generator was changed slightly, so the purpose of this option is to allow reproducibility of results obtained with `R` 3.5.3 or earlier.  Possible values are *Current* (the default) for the random number generator of the `R` version currently used, or *Compatibility with R 3.5.3*.  Note that this option has no effect if `R` version 3.5.3 or earlier is used.
+* **Version**:  This allows to set the version of the random number generator to be used.  In `R` version 3.6.0, the default random number generator was improved slightly, so the purpose of this option is to allow reproducibility of results obtained with `R` 3.5.3 or earlier.  Possible values are *Current* (the default) for the random number generator of the `R` version currently used, or *Compatibility with R 3.5.3*.  Note that this option has no effect if `R` version 3.5.3 or earlier is used.
 
 
 ## Report issues and request features

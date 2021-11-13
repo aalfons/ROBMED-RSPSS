@@ -1,10 +1,10 @@
-<!-- ************************************** -->
+<!-- ************************************ -->
 <!-- Author: Andreas Alfons                 -->
-<!--         Erasmus Universiteit Rotterdam -->
-<!-- ************************************** -->
+<!--         Erasmus University Rotterdam -->
+<!-- ************************************ -->
 
 <Command xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extension.xsd" Name="ROBMED" Language="R" Mode="Source">
-  <Subcommand Name="" Occurrence="Required">
+  <Subcommand Name="" Occurrence="Optional">
     <Parameter Name="Y" ParameterType="VariableName" />
     <Parameter Name="X" ParameterType="VariableName" />
     <Parameter Name="M" ParameterType="VariableNameList" />
