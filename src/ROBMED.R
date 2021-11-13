@@ -245,35 +245,37 @@ print_SPSS.summary_test_mediation <- function(x, ...) {
 
 # print ggplot2 graphics (diagnostic plot)
 print_SPSS.ggplot <- function(x, ...) {
-  # The following code does not work properly under MacOS because SPSS requires
-  # X11 for this, which is no longer included with MacOS.  Some users might
-  # have XQuartz installed, but we can't rely on this.  It might work on
-  # Windows, but this needs to be tested first before we can include it in the
-  # SPSS extension.
-  # -----
-  # spssRGraphics.SetGraphicsLabel("Diagnostic plot of regression weights")
-  # print(x)
-  # -----
-  # As a workaround, a temporary file containing the plot is created, which is
-  # then displayed in the SPSS output with spssRGraphics.Submit().  According
-  # to the documentation, this function only supports PNG, JPG and BMP files.
-  # -----
-  file <- "tmp_weight_plot.png"
+  # make labels a little larger
   x <- x +
-    labs(title = "Diagnostic plot of regression weights") +
     theme(axis.title = element_text(size = 13),
           axis.text = element_text(size = 12),
           legend.text = element_text(size = 12),
-          plot.title = element_text(face = "bold", size = 18),
-          plot.title.position = "plot",
           strip.text = element_text(size = 13))
-  png(filename = file, width = 540, height = 600)
-  print(x)
-  dev.off()
-  spssRGraphics.Submit(file)
-  tryCatch(file.remove(file), warning = function(w) NULL,
-           error = function(e) NULL)
-  # -----
+  # print graphics
+  if (have_MacOS()) {
+    # Simply printing the graphics to the default graphics device does not
+    # work properly under MacOS because SPSS requires X11 for this, which is
+    # no longer included with MacOS.  Some users might have XQuartz installed,
+    # but we can't rely on this.  As a workaround, a temporary file containing
+    # the plot is created, which is then displayed in the SPSS output with
+    # spssRGraphics.Submit().  According to the documentation, this function
+    # only supports PNG, JPG and BMP files.
+    file <- "tmp_weight_plot.png"
+    x <- x +
+      labs(title = "Diagnostic plot of regression weights") +
+      theme(plot.title = element_text(face = "bold", size = 18),
+            plot.title.position = "plot")
+    png(filename = file, width = 540, height = 600)
+    print(x)
+    dev.off()
+    spssRGraphics.Submit(file)
+    tryCatch(file.remove(file), warning = function(w) NULL,
+             error = function(e) NULL)
+  } else {
+    # print graphics as usual
+    spssRGraphics.SetGraphicsLabel("Diagnostic plot of regression weights")
+    print(x)
+  }
   # return NULL invisibly
   invisible()
 }
@@ -298,4 +300,19 @@ replace_dimnames <- function(x) {
   # replace column names and return object
   dimnames(x) <- list(rn, cn)
   x
+}
+
+# # check if a Windows machine is used
+# have_windows <- function() {
+#   sys_info <- Sys.info()  # may not be available on all platforms
+#   if (is.null(sys_info)) .Platform$OS.type == "windows"
+#   else sys_info["sysname"] == "Windows"
+# }
+
+# check if a Mac is used
+have_MacOS <- function() {
+  sys_info <- Sys.info()  # may not be available on all platforms
+  if (is.null(sys_info)) {
+    .Platform$OS.type == "unix" && grepl("^darwin", R.version$os)
+  } else sys_info["sysname"] == "Darwin"
 }
