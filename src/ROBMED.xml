@@ -17,8 +17,8 @@
     <Parameter Name="MAXITER" ParameterType="Integer" />
     <Parameter Name="SEED" ParameterType="Integer" />
     <Parameter Name="RNG" ParameterType="Keyword">
-      <EnumValue Name="CURRENT"/>
-      <EnumValue Name="COMPATIBILITY"/>
+      <EnumValue Name="CURRENT" />
+      <EnumValue Name="COMPATIBILITY" />
     </Parameter>
   </Subcommand>
   <Subcommand Name="PLOTS" Ocurrence="Optional">
