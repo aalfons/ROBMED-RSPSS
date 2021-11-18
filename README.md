@@ -67,6 +67,4 @@ If you experience any bugs or issues or if you have any suggestions for addition
 
 ## Ask for help
 
-If you need help using the extension bundle, or if you are interested in
-collaborations related to this project, please get in touch with the
-[maintainer](https://personal.eur.nl/alfons/).
+If you need help using the extension bundle, or if you are interested in collaborations related to this project, please get in touch with the [maintainer](https://personal.eur.nl/alfons/).
