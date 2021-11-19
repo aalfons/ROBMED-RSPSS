@@ -42,9 +42,11 @@ To run the robust boostrap test ROBMED for mediation analysis:
 
 ### Ordinal and nominal variables
 
-It is important to note that `SPSS` and `R` store and handle categorical variables differently.  For categorical variables (ordinal or nominal), the *value labels* are passed on to `R` for the analysis.  Make sure that all value labels actually occur in the data, otherwise the analysis may give an error.
+It is important to note that `SPSS` and `R` store and handle categorical variables differently.  
 
-If the values of an ordinal variable should be interpreted as numeric values, i.e., if the ordinal scale is linear, store a copy of that variable as a *scale* variable.  Using the scale variable in the analysis makes it explicit for `R` that it should be treated as a numeric variable.
+For numeric variables on an ordinal measurement scale, `ROBMED` passes on the *values* to `R`.  In other words, the ordinal scale is assumed to be linear, which is typical `SPSS` behavior in linear regression models.
+
+For all other categorical variables (numeric variables on a nominal measurement scale, string variables on an ordinal or nominal measurement scale), `ROBMED` preserves the categorical nature and passes on the *value labels* to `R`.  Those variables are then converted into groups of dummy variables for the analysis, which is typical `R` behavior.  Make sure that all value labels actually occur in the data, otherwise the analysis may give an error.
 
 
 ### Further details

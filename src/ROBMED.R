@@ -125,6 +125,23 @@ call_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
   data <- spssdata.GetDataFromSPSS(variables, missingValueToNA = TRUE,
                                    factorMode = "labels")
 
+  # check if there are any ordered factors, and if so overwrite them with the
+  # underlying numeric values in the SPSS data
+  is_ordinal <- sapply(data, is.ordered)
+  if (any(is_ordinal)) {
+    # check if the ordinal variables are actually numeric (in SPSS, both
+    # numeric and string type variables can have an ordinal measurement scale)
+    ordinal_data <- spssdata.GetDataFromSPSS(variables[is_ordinal],
+                                                  missingValueToNA = TRUE,
+                                                  factorMode = "none")
+    is_numeric <- sapply(ordinal_data, is.numeric)
+    # replace variables, if any
+    if (any(is_numeric)) {
+      replace <- which(is_ordinal)[is_numeric]
+      data[, replace] <- ordinal_data[, is_numeric]
+    }
+  }
+
   # translate options
   level <- conf / 100
   control <- reg_control(efficiency = efficiency / 100,
