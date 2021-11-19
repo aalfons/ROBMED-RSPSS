@@ -40,6 +40,15 @@ To run the robust boostrap test ROBMED for mediation analysis:
 4. Click **Run**.
 
 
+### Ordinal and nominal variables
+
+It is important to note that `SPSS` and `R` store and handle categorical variables differently.  For categorical variables (ordinal or nominal), the *value labels* are passed on to `R` for the analysis.  Make sure that all value labels actually occur in the data, otherwise the analysis may give an error.
+
+If the values of an ordinal variable should be interpreted as numeric values, i.e., if the ordinal scale is linear, store a copy of that variable as a *scale* variable.  Using the scale variable in the analysis makes it explicit for `R` that it should be treated as a numeric variable.
+
+
+### Further details
+
 Other elements of the `ROBMED` dialog can be used to further customize your analysis.
 
 * **Confidence level**:  Enter an integer between 90 and 99 for the desired confidence level of the bootstrap confidence interval of the indirect effect.  The default is 95 for a 95% confidence level.
