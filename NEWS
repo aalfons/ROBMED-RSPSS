@@ -2,3 +2,6 @@ Changes in extension bundle ROBMED version 0.4.0
 
     + Improved handling of ordered and nominal variables, which also allows to
       use string variables as independent variable or mediators.
+
+    + Fix in help text: added documentation of parameters that define the
+      variables.

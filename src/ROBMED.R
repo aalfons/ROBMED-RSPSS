@@ -9,7 +9,7 @@ help_text <- "
 Command ROBMED requires the R Integration Plug-in and the R package 'robmed'.
 
 ROBMED Y=dependent variable X=independent variable M=mediators
-      [COV=control variables]
+      [COV=additional covariates]
  [/OPTIONS [CONF=integer value] [BOOT=integer value]
            [EFFICIENCY=integer value] [MAXITER=integer value]
            [SEED=integer value] [RNG={CURRENT}]      ]
@@ -19,12 +19,41 @@ ROBMED Y=dependent variable X=independent variable M=mediators
 
 ROBMED /HELP prints this information and does nothing else.
 
+
 Example:
 ROBMED Y=TeamCommitment X=ValueDiversity M=TaskConflict
   /OPTIONS CONF=95 BOOT=5000
            EFFICIENCY=85 MAXITER=10000
            SEED=20211117 RNG=CURRENT
   /PLOTS WEIGHT=1.
+
+
+It is important to note that SPSS and R store and handle categorical variables
+differently.
+
+For numeric variables on an ordinal measurement scale, ROBMED passes on the
+values to R.  In other words, the ordinal scale is assumed to be linear, which
+is typical SPSS behavior in linear regression models.
+
+For all other categorical variables (numeric variables on a nominal measurement
+scale, string variables on an ordinal or nominal measurement scale), ROBMED
+preserves the categorical nature and passes on the value labels to R.  Those
+variables are then converted into groups of dummy variables for the analysis,
+which is typical R behavior.  Make sure that all value labels actually occur in
+the data, otherwise the analysis may give an error.
+
+
+Parameters:
+
+Y:  a numeric variable on an ordinal or scale measurement level to be used as
+    dependent variable. (*required*)
+
+X:  a variable to be used as independent variable. (*required*)
+
+M:  one or more numeric variables on an ordinal or scale measurement level to
+    be used as hypothesized mediators. (*required*)
+
+COV:  variables to be used as additional covariates.
 
 CONF:  integer value for the desired confidence level of the bootstrap
        confidence interval of the indirect effect.  The default is 95 for
