@@ -33,11 +33,13 @@ To run the robust boostrap test ROBMED for mediation analysis:
 
 1. From the SPSS menu, select **Analyze > Regression > ROBMED: Robust Mediation Analysis**
 
-2. In the `ROBMED` dialog, select a numeric **Y variable** (the dependent variable), an **X variable** (the independent variable), and one or more numeric **Mediator(s) (M)** (the hypothesized mediator variables).
+2. In the `ROBMED` dialog, select a numeric **Y variable** (the dependent variable), one or more **X variable(s)** (the independent variables of interest), and one or more numeric **Mediator(s) (M)** (the hypothesized mediator variables).
 
 3. Optionally, you can select one or more **Covariate(s)** (additional control variables).
 
-4. Click **Run**.
+4. In case of multiple hypothesized mediators, select between the parallel and serial multiple mediator model via **Multiple mediator model**.  The default is to use parallel mediators.
+
+5. Click **Run**.
 
 
 ### Ordinal and nominal variables
