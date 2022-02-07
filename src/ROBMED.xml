@@ -6,9 +6,13 @@
 <Command xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extension.xsd" Name="ROBMED" Language="R" Mode="Source">
   <Subcommand Name="" Occurrence="Optional">
     <Parameter Name="Y" ParameterType="VariableName" />
-    <Parameter Name="X" ParameterType="VariableName" />
+    <Parameter Name="X" ParameterType="VariableNameList" />
     <Parameter Name="M" ParameterType="VariableNameList" />
     <Parameter Name="COV" ParameterType="VariableNameList" />
+    <Parameter Name="MODEL" ParameterType="Keyword">
+      <EnumValue Name="PARALLEL" />
+      <EnumValue Name="SERIAL" />
+    </Parameter>
   </Subcommand>
   <Subcommand Name="OPTIONS" Ocurrence="Optional">
     <Parameter Name="CONF" ParameterType="Integer" />

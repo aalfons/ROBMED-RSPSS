@@ -8,14 +8,15 @@
 help_text <- "
 Command ROBMED requires the R Integration Plug-in and the R package 'robmed'.
 
-ROBMED Y=dependent variable X=independent variable M=mediators
-      [COV=additional covariates]
+ROBMED Y=dependent variable X=independent variables M=hypothesized mediators
+      [COV=additional control variables] [MODEL={PARALLEL}]
+                                                {SERIAL}
  [/OPTIONS [CONF=integer value] [BOOT=integer value]
            [EFFICIENCY=integer value] [MAXITER=integer value]
-           [SEED=integer value] [RNG={CURRENT}]      ]
+           [SEED=integer value] [RNG={CURRENT}]     ]
                                      {COMPATIBILITY}
- [/PLOTS [WEIGHT = {0}] ]
-                   {1}
+ [/PLOTS [WEIGHT={0}]]
+                 {1}
 
 ROBMED /HELP prints this information and does nothing else.
 
@@ -48,12 +49,17 @@ Parameters:
 Y:  a numeric variable on an ordinal or scale measurement level to be used as
     dependent variable. (*required*)
 
-X:  a variable to be used as independent variable. (*required*)
+X:  one or more independent variables of interest. (*required*)
 
 M:  one or more numeric variables on an ordinal or scale measurement level to
     be used as hypothesized mediators. (*required*)
 
-COV:  variables to be used as additional covariates.
+COV:  variables to be used as additional control variables
+
+MODEL:  in case of multiple hypothesized mediators, a character string
+        specifying the type of mediation model.  Possible values are 'PARALLEL'
+        (the default) for the parallel multiple mediator model, or 'SERIAL' for
+        the serial multiple mediator model.
 
 CONF:  integer value for the desired confidence level of the bootstrap
        confidence interval of the indirect effect.  The default is 95 for
@@ -107,11 +113,13 @@ Run <- function(args){
     spsspkg.Template(kwd = "Y", subc = "", ktype = "existingvarlist",
                      islist = FALSE, var = "y"),
     spsspkg.Template(kwd = "X", subc = "", ktype = "existingvarlist",
-                     islist = FALSE, var = "x"),
+                     islist = TRUE, var = "x"),
     spsspkg.Template(kwd = "M", subc = "", ktype = "existingvarlist",
                      islist = TRUE, var = "m"),
     spsspkg.Template(kwd = "COV", subc = "", ktype = "varname",
                      islist = TRUE, var = "covariates"),
+    spsspkg.Template(kwd = "MODEL", subc = "", ktype = "str",
+                     islist = FALSE, var = "model"),
     spsspkg.Template(kwd = "CONF", subc = "OPTIONS", ktype = "int",
                      islist = FALSE, var = "conf"),
     spsspkg.Template(kwd = "BOOT", subc = "OPTIONS", ktype = "int",
@@ -137,17 +145,27 @@ Run <- function(args){
 ## function to take objects parsed by SPSS and call function robmed() from the
 ## R package robmed
 
-call_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
-                       efficiency = 85, maxiter = 10000, seed = NULL,
-                       rng = "current", plot = 1) {
+call_robmed <- function(y, x, m, covariates = NULL, model = "parallel",
+                        conf = 95, boot = 5000, efficiency = 85,
+                        maxiter = 10000, seed = NULL, rng = "current",
+                        plot = 1) {
 
   # check if package robmed is available
   tryCatch(library("robmed"), error = function(e) {
     stop("The R package 'robmed' is required but could not be loaded.",
          call. = FALSE)
   })
+  # check version of package robmed
+  robmed_version <- packageVersion("robmed")
+  if (robmed_version < "0.10.0") {
+    stop("Some functionality requires at least version 0.10.0 of the R ",
+         "package 'robmed', but you have version ", robmed_version,
+         ".\nPlease update to the latest version of the R package 'robmed'.",
+         call. = FALSE)
+  }
 
   # get variables from active data set
+  x <- unlist(x)
   m <- unlist(m)
   covariates <- unlist(covariates)
   variables <- c(x, y, m, covariates)
@@ -161,8 +179,8 @@ call_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
     # check if the ordinal variables are actually numeric (in SPSS, both
     # numeric and string type variables can have an ordinal measurement scale)
     ordinal_data <- spssdata.GetDataFromSPSS(variables[is_ordinal],
-                                                  missingValueToNA = TRUE,
-                                                  factorMode = "none")
+                                             missingValueToNA = TRUE,
+                                             factorMode = "none")
     is_numeric <- sapply(ordinal_data, is.numeric)
     # replace variables, if any
     if (any(is_numeric)) {
@@ -172,25 +190,20 @@ call_robmed <- function(y, x, m, covariates = NULL, conf = 95, boot = 5000,
   }
 
   # translate options
+  model <- tolower(model)
   level <- conf / 100
   control <- reg_control(efficiency = efficiency / 100,
                          max_iterations = maxiter)
   switch_rng <- rng == "compatibility"
-  rng_version <- "3.5.3"
-
-  # translate plot options
   plot <- isTRUE(as.logical(plot))
-  if (plot && packageVersion("robmed") < "0.8.0") {
-    warning("Diagnostic plot not available in this version of the R package ",
-            "'robmed'.\nPlease update to the latest version.", call. = FALSE)
-  }
 
   # run function robmed()
   result <- tryCatch({
-    if (switch_rng) RNGversion(rng_version)
+    if (switch_rng) RNGversion("3.5.3")
     if (!is.null(seed)) set.seed(seed)
     robust_boot <- robmed(data, x = x, y = y, m = m, covariates = covariates,
-                          R = boot, level = level, control = control)
+                          model = model, R = boot, level = level,
+                          control = control)
     summary(robust_boot, plot = plot)
   }, error = function(e) stop(e))
 
@@ -217,7 +230,7 @@ print_SPSS.summary_lmrob <- function(x, response, ...) {
   # as it is passed as 'outline' argument for summary and coefficients tables)
   outline <- sprintf("Outcome variable: %s", response)
   # print model summary
-  summary <- data.frame("Robust R" = sqrt(x$R2$R2), "Rob. R Square" = x$R2$R2,
+  summary <- data.frame("Robust R" = sqrt(x$R2$R2), "Robust R Square" = x$R2$R2,
                         "Adjusted Robust R Square" = x$R2$adj_R2,
                         "Robust Std. Error of the Estimate" = x$s$value,
                         "Robust F" = x$F_test$statistic,
@@ -230,16 +243,14 @@ print_SPSS.summary_lmrob <- function(x, response, ...) {
   coefficients <- replace_dimnames(x$coefficients)
   spsspivottable.Display(coefficients, title = "Coefficients",
                          outline = outline, hiderowdimlabel = FALSE)
-  # print information on outliers (only available in summary from 0.7.0 onwards)
-  if (packageVersion("robmed") >= "0.7.0") {
-    outlier_info <- robmed:::get_outlier_info(x$outliers)
-    if (is.null(outlier_info$indices)) msg <- outlier_info$msg
-    else {
-      indices_to_print <- paste(outlier_info$indices, collapse = ", ")
-      msg <- paste0(outlier_info$msg, indices_to_print, "\n", sep = "")
-    }
-    spss.TextBlock("Robustness weights", msg, outline = outline)
+  # print information on outliers
+  outlier_info <- robmed:::get_outlier_info(x$outliers)
+  if (is.null(outlier_info$indices)) msg <- outlier_info$msg
+  else {
+    indices_to_print <- paste(outlier_info$indices, collapse = ", ")
+    msg <- paste0(outlier_info$msg, indices_to_print, "\n", sep = "")
   }
+  spss.TextBlock("Robustness weights", msg, outline = outline)
   # return NULL invisibly
   invisible()
 }
@@ -248,18 +259,32 @@ print_SPSS.summary_lmrob <- function(x, response, ...) {
 print_SPSS.summary_reg_fit_mediation <- function(x, outline, ...) {
 
   ## initializations
+  p_x <- length(x$x)
   p_m <- length(x$m)
+  simple <- p_m == 1L && p_x == 1L
   have_covariates <- length(x$covariates) > 0L
 
+  ## in case of multiple mediators, print information on type of mediation model
+  if (p_m > 1L) {
+    prefix <- switch(x$model, parallel = "Parallel", serial = "Serial")
+    header <- paste(prefix, "multiple mediator model\n\n")
+  } else header <- ""
   ## information on variables
-  if (p_m == 1L) {
+  if (simple) {
     info <- sprintf("Y = %s\nX = %s\nM = %s", x$y, x$x, x$m)
   } else {
-    width <- nchar(p_m) + 1L
+    width <- max(nchar(p_x), nchar(p_m)) + 1L
     info_y <- sprintf(paste0("%-", width, "s = %s"), "Y", x$y)
-    info_x <- sprintf(paste0("%-", width, "s = %s"), "X", x$x)
-    m_labels <- paste0("M", seq_len(p_m))
-    info_m <- sprintf(paste0("%-", width, "s = %s"), m_labels, x$m)
+    if (p_x == 1L) info_x <- sprintf(paste0("%-", width, "s = %s"), "X", x$x)
+    else {
+      x_labels <- paste0("X", seq_len(p_x))
+      info_x <- sprintf(paste0("%-", width, "s = %s"), x_labels, x$x)
+    }
+    if (p_m == 1L) info_m <- sprintf(paste0("%-", width, "s = %s"), "M", x$m)
+    else {
+      m_labels <- paste0("M", seq_len(p_m))
+      info_m <- sprintf(paste0("%-", width, "s = %s"), m_labels, x$m)
+    }
     info <- paste(c(info_y, info_x, info_m), collapse = "\n")
   }
   # add information on covariates, if any
@@ -270,12 +295,11 @@ print_SPSS.summary_reg_fit_mediation <- function(x, outline, ...) {
   # add sample size
   info <- paste(info, sprintf("Sample size: %d", x$n), sep = "\n\n")
   # write text block
-  spss.TextBlock("Information on Data", info)
+  spss.TextBlock("Information on Data", paste0(header, info))
 
   ## print summary of regression m ~ x + covariates
-  if (p_m == 1L) {
-    print_SPSS(x$fit_mx, response = x$m)
-  } else {
+  if (p_m == 1L) print_SPSS(x$fit_mx, response = x$m)
+  else {
     for (m in x$m) {
       print_SPSS(x$fit_mx[[m]], response = m)
     }
@@ -285,16 +309,16 @@ print_SPSS.summary_reg_fit_mediation <- function(x, outline, ...) {
   print_SPSS(x$fit_ymx, response = x$y)
 
   ## print summary of total and direct effects of x on y
-  have_old_version <- packageVersion("robmed") < "0.5.0"
+  plural <- if (p_x == 1L) "" else "s"
   # total effect
-  total <- if (have_old_version) x$c_prime else x$total
-  total <- replace_dimnames(total)
-  spsspivottable.Display(total, title = "Total Effect of X on Y",
+  total <- replace_dimnames(x$total)
+  spsspivottable.Display(total,
+                         title = sprintf("Total Effect%s of X on Y", plural),
                          outline = outline, hiderowdimlabel = FALSE)
   # direct effect
-  direct <- if (have_old_version) x$c else x$direct
-  direct <- replace_dimnames(direct)
-  spsspivottable.Display(direct, title = "Direct Effect of X on Y",
+  direct <- replace_dimnames(x$direct)
+  spsspivottable.Display(direct,
+                         title = sprintf("Direct Effect%s of X on Y", plural),
                          outline = outline, hiderowdimlabel = FALSE)
 
   ## return NULL invisibly
@@ -304,24 +328,24 @@ print_SPSS.summary_reg_fit_mediation <- function(x, outline, ...) {
 # print results of a bootstrap test for indirect effect
 print_SPSS.boot_test_mediation <- function(x, outline, ...) {
   # initializations
+  p_x <- length(x$fit$x)
   m <- x$fit$m
   p_m <- length(m)
-  plural <- if (p_m == 1L) "" else "s"
-  title <- sprintf("\nIndirect effect%s of X on Y:\n", plural)
+  simple <- p_m == 1L && p_x == 1L
   # extract indirect effect
-  a <- x$fit$a
-  b <- x$fit$b
-  ab <- a * b
-  if (p_m > 1L) ab <- c(Total = sum(ab), ab)
-  ab <- cbind(Data = ab, Boot = x$ab)
-  if (p_m == 1L) rownames(ab) <- m
+  indirect <- cbind(Data = x$fit$indirect, Boot = x$indirect)
+  if (simple) rownames(indirect) <- m
+  else rownames(indirect) <- gsub("->", " -> ", rownames(indirect))
   # extract confidence interval
-  ci <- if (p_m == 1L) t(x$ci) else x$ci
+  ci <- if (simple) t(x$ci) else x$ci
   colnames(ci) <- c("Lower Bound", "Upper Bound")
-  # combine and print
-  ab <- cbind(ab, ci)
-  spsspivottable.Display(ab, title = title, outline = outline,
-                         hiderowdimlabel = FALSE)
+  # combine indirect effect and confidence interval
+  indirect <- cbind(indirect, ci)
+  # print table
+  plural <- if (simple) "" else "s"
+  spsspivottable.Display(indirect,
+                         title = sprintf("Indirect effect%s of X on Y", plural),
+                         outline = outline, hiderowdimlabel = FALSE)
   # print additional notes
   note_ci <- paste("Level of confidence:", format(100 * x$level), "%")
   note_boot <- sprintf("Number of bootstrap replicates: %d", x$R)

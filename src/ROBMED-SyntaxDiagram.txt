@@ -1,8 +1,9 @@
 ROBMED
 Y = dependent variable
-X = independent variable
+X = independent variables
 M = hypothesized mediators
-COV = optional covariates
+COV = optional control variables
+MODEL = type of mediation model in case of multiple hypothesized mediators
 /OPTIONS CONF = confidence level
          BOOT = number of bootstrap samples
          EFFICIENCY = efficiency of the MM-estimator
