@@ -335,7 +335,20 @@ print_SPSS.boot_test_mediation <- function(x, outline, ...) {
   # extract indirect effect
   indirect <- cbind(Data = x$fit$indirect, Boot = x$indirect)
   if (simple) rownames(indirect) <- m
-  else rownames(indirect) <- gsub("->", " -> ", rownames(indirect))
+  else if (p_m > 1L) {
+    # make labels for individual indirect effects prettier
+    rn <- gsub("->", " -> ", rownames(indirect), fixed = TRUE)
+    # in case of multiple independent variables, make labels for the
+    # corresponding total indirect effects prettier
+    if (p_x > 1L) {
+      replace <- sapply(paste(x$fit$x, "Total", sep = "_"),
+                        function(current_x) which(current_x == rn),
+                        USE.NAMES = FALSE)
+      rn[replace] <- paste(x$fit$x, "Total", sep = ": ")
+    }
+    # update labels for indirect effects
+    rownames(indirect) <- rn
+  }
   # extract confidence interval
   ci <- if (simple) t(x$ci) else x$ci
   colnames(ci) <- c("Lower Bound", "Upper Bound")
