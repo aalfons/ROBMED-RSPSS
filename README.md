@@ -6,7 +6,7 @@ This is an `SPSS` `R` extension bundle for the robust bootstrap test ROBMED ([Al
 
 ## About ROBMED
 
-The robust bootstrap test ROBMED for mediation analysis is less sensitive to deviations from model assumptions (such as outliers or heavily tailed distributions) than the standard bootstrap test of Preacher & Hayes ([2004](http://dx.doi.org/10.3758/BF03206553), [2008](http://dx.doi.org/10.3758/BRM.40.3.879)).  ROBMED utilizes the robust MM-regression estimator ([Yohai, 1987](https://projecteuclid.org/euclid.aos/1176350366)) instead of the OLS estimator for regression, and runs bootstrap tests with the fast and robust bootstrap methodology ([Salibián-Barrera & Zamar, 2002](https://projecteuclid.org/euclid.aos/1021379865); [Salibián-Barrera & Van Aelst, 2008](https://doi.org/10.1016/j.csda.2008.05.007)).
+The robust bootstrap test ROBMED for mediation analysis is less sensitive to deviations from model assumptions (such as outliers or heavily tailed distributions) than the standard bootstrap test of Preacher & Hayes ([2004](https://doi.org/10.3758/BF03206553), [2008](https://doi.org/10.3758/BRM.40.3.879)).  ROBMED utilizes the robust MM-regression estimator ([Yohai, 1987](https://doi.org/10.1214/aos/1176350366)) instead of the OLS estimator for regression, and runs bootstrap tests with the fast and robust bootstrap methodology ([Salibián-Barrera & Zamar, 2002]((https://doi.org/10.1214/aos/102137986); [Salibián-Barrera & Van Aelst, 2008](https://doi.org/10.1016/j.csda.2008.05.007)).
 
 More information can be found in our article:
 
@@ -16,7 +16,7 @@ Mediation Analysis. *Organizational Research Methods*. DOI [10.1177/109442812199
 
 ## Installing the extension bundle
 
-Before you can install the extension bundle `ROBMED`, you need to install [`R`](https://cran.r-project.org/) and the [`R` plug-in for `SPSS`](https://github.com/IBMPredictiveAnalytics/R_Essentials_Statistics/releases).  Make sure that you install the version of `R` that is required for your version of `SPSS`.  Starting with `SPSS` version 28.0, `R` and the integration plug-in are automatically installed with `SPSS`.
+Before you can install the extension bundle `ROBMED`, you need to install [`R`](https://CRAN.R-project.org/) and the [`R` plug-in for `SPSS`](https://github.com/IBMPredictiveAnalytics/R_Essentials_Statistics/releases).  Make sure that you install the version of `R` that is required for your version of `SPSS`.  Starting with `SPSS` version 28.0, `R` and the integration plug-in are automatically installed with `SPSS`.
 
 In `R`, install the add-on package [`robmed`](https://github.com/aalfons/robmed). Always make sure that the latest version of the package is installed.
 
