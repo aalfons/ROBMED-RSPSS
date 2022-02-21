@@ -42,7 +42,7 @@ To run the robust boostrap test ROBMED for mediation analysis:
 5. Click **Run**.
 
 <div class="figure">
-<img src="./screenshots/ROBMED-dialog.png" width="80%" alt="Main dialog of ROBMED" style="display: block; margin: auto;" />
+<img src="./screenshots/ROBMED-dialog.png" width="90%" alt="Main dialog of ROBMED" style="display: block; margin: auto;" />
 <p class="caption">Figure 1: Main dialog of the `SPSS` `R` extension `ROBMED`, which links to the `R` package `robmed`.</p>
 </div>
 
@@ -78,7 +78,7 @@ Additional options can be entered by clicking on the **Options** button.  This o
 * **Version**:  This allows to set the version of the random number generator to be used.  In `R` version 3.6.0, the default random number generator was improved slightly, so the purpose of this option is to allow reproducibility of results obtained with `R` 3.5.3 or earlier.  Possible values are *Current* (the default) for the random number generator of the `R` version currently used, or *Compatibility with R 3.5.3*.  Note that this option has no effect if `R` version 3.5.3 or earlier is used.
 
 <div class="figure">
-<img src="./screenshots/ROBMED-options.png" width="40%" alt="Further options for ROBMED" style="display: block; margin: auto;" />
+<img src="./screenshots/ROBMED-options.png" width="50%" alt="Further options for ROBMED" style="display: block; margin: auto;" />
 <p class="caption">Figure 2: Dialog with further options for the `SPSS` `R` extension `ROBMED`, which links to the `R` package `robmed`.</p>
 </div>
 
