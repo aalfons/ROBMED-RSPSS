@@ -43,7 +43,7 @@ To run the robust boostrap test ROBMED for mediation analysis:
 
 <div class="figure">
 <img src="./screenshots/ROBMED-dialog.png" width="90%" alt="Main dialog of ROBMED" style="display: block; margin: auto;" />
-<p class="caption">Figure 1: Main dialog of the `SPSS` `R` extension `ROBMED`, which links to the `R` package `robmed`.</p>
+<p class="caption">Figure 1: Main dialog of the <code>SPSS</code> <code>R</code> extension bundle <code>ROBMED</code>, which links to the <code>R</code> package <code>robmed<,code>.</p>
 </div>
 
 
@@ -79,7 +79,7 @@ Additional options can be entered by clicking on the **Options** button.  This o
 
 <div class="figure">
 <img src="./screenshots/ROBMED-options.png" width="50%" alt="Further options for ROBMED" style="display: block; margin: auto;" />
-<p class="caption">Figure 2: Dialog with further options for the `SPSS` `R` extension `ROBMED`, which links to the `R` package `robmed`.</p>
+<p class="caption">Figure 2: Dialog with further options for the <code>SPSS</code> <code>R</code> extension bundle <code>ROBMED</code>, which links to the <code>R</code> package <code>robmed<,code>.</p>
 </div>
 
 
