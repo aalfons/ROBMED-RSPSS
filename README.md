@@ -1,7 +1,13 @@
 # ROBMED: A robust bootstrap test for mediation analysis
 
 
-This is an `SPSS` `R` extension bundle for the robust bootstrap test ROBMED ([Alfons, Ates & Groenen, 2021](https://doi.org/10.1177/1094428121999096)) for mediation analysis.  It links to the `R` package [`robmed`](https://github.com/aalfons/robmed).
+This is an `SPSS` `R` extension bundle for the robust bootstrap test ROBMED ([Alfons, Ates & Groenen, 2022](https://doi.org/10.1177/1094428121999096)) for mediation analysis.  It links to the `R` package [`robmed`](https://github.com/aalfons/robmed).
+
+To cite the extension bundle `ROBMED` in publications, please use:
+
+Alfons A (2022). `ROBMED`: `SPSS` `R` Extension Bundle for Robust Mediation Analysis. doi: [10.25397/eur.19354268.v1](https://doi.org/10.25397/eur.19354268.v1).
+
+Alfons, A., Ates, N.Y., & Groenen, P.J.F. (2022). Robust Mediation Analysis: The `R` Package `robmed`. *Journal of Statistical Software*, **103**(13), 1--45. doi: [10.18637/jss.v103.i13](https://doi.org/10.18637/jss.v103.i13).
 
 
 ## About ROBMED
@@ -10,8 +16,7 @@ The robust bootstrap test ROBMED for mediation analysis is less sensitive to dev
 
 More information can be found in our article:
 
-Alfons, A., Ates, N.Y., & Groenen, P.J.F. (2021). A Robust Bootstrap Test for
-Mediation Analysis. *Organizational Research Methods*. DOI [10.1177/1094428121999096](https://doi.org/10.1177/1094428121999096).
+Alfons, A., Ates, N.Y., & Groenen, P.J.F. (2022). A Robust Bootstrap Test for Mediation Analysis. *Organizational Research Methods*, **25**(3), 591--617. doi: [10.1177/1094428121999096](https://doi.org/10.1177/1094428121999096).
 
 
 ## Installing the extension bundle
