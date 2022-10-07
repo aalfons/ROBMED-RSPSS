@@ -73,24 +73,40 @@ Other elements of the `ROBMED` dialog can be used to further customize your anal
 
 * **Number of bootstrap samples**:  Enter an integer between 1000 and 50000 for the desired number of bootstrap samples.  The default is 5000 samples.  For lower values, the obtained confidence intervals may not be very accurate, as the limits are based on percentiles of the bootstrap distribution.
 
+* **Seed of the random number generator**:  Optionally, enter an integer to be used as seed for the random number generator.  It is important to note that setting a seed is necessary for reproducibility of results.
+
 * **Diagnostic plot of regression weights**:  Check this box to create a diagnostic plot of the weights from the robust regressions. This plot allows to easily detect deviations from normality assumptions such as skewness or heavy tails.
 
 
-Additional options can be entered by clicking on the **Options** button.  This opens a subdialog that allows to customize the MM-estimator of regression as well as the random number generator.
+Additional options can be entered by clicking on the **Options** button.  This opens a subdialog that allows to customize the MM-estimator of regression and to set the random number generator for backwards compatibility with earlier versions of `R`.
 
 * **Efficiency at the normal distribution**: This allows to set the desired efficiency of the MM-estimator under normally distributed error terms.  Higher efficiency may increase the bias under deviations from normality, although this bias will still be bounded (unlike OLS estimation, for which the bias can become arbitrarily large under such deviations from the model assumptions).  Possible values are 80%, 85% (the default), 90% or 95% efficiency.
 
 * **Maximum number of iterations**:  The computation of the MM-estimator of regression requires an iterative algorithm.  Enter an integer between 1000 and 1000000 for the maximum number of iterations to be executed in this algorithm.  If this number of iterations is reached, the algorithm will terminate *without convergence*.  The default is a maximum of 10000 iterations.  In practice, far fewer iterations should be necessary for convergence.
 
-* **Seed**:  Optionally, enter an integer to be used as seed for the random number generator.  It is important to note that setting a seed is necessary for reproducibility of results.
-
-* **Version**:  This allows to set the version of the random number generator to be used.  In `R` version 3.6.0, the default random number generator was improved slightly, so the purpose of this option is to allow reproducibility of results obtained with `R` 3.5.3 or earlier.  Possible values are *Current* (the default) for the random number generator of the `R` version currently used, or *Compatibility with R 3.5.3*.  Note that this option has no effect if `R` version 3.5.3 or earlier is used.
+* **Version of the random number generator**:  This allows to set the version of the random number generator to be used.  In `R` version 3.6.0, the default random number generator was improved slightly, so the purpose of this option is to allow reproducibility of results obtained with `R` 3.5.3 or earlier.  Possible values are *Current* (the default) for the random number generator of the `R` version currently used, or *Compatibility with R 3.5.3*.  Note that this option has no effect if `R` version 3.5.3 or earlier is used.
 
 <div class="figure">
 <img src="./screenshots/ROBMED-options.png" width="50%" alt="Further options for ROBMED" style="display: block; margin: auto;" />
 <p class="caption"><em>Figure 2:</em> Dialog with further options for the <code>SPSS</code> <code>R</code> extension bundle <code>ROBMED</code>, which links to the <code>R</code> package <code>robmed</code>.</p>
 </div>
 
+
+## Which R version is required for which version of SPSS?
+
+Each version of `SPSS` requires a specific version of `R` for the `R` plug-in. Starting with `SPSS` version 28.0, `R` and the integration plug-in are automatically installed with `SPSS`. Nevertheless, the table below lists which version of `R` is required for different versions of `SPSS`.
+
+<div style="width:50%; margin:0 auto;">
+| SPSS version | &nbsp; R version &nbsp; |
+| :----------: | :---------------------: |
+|           23 |                     3.1 |      
+|           24 |                     3.2 |      
+|           25 |                     3.3 |      
+|           26 |                     3.5 |      
+|           27 |                     3.6 |      
+|           28 |                     4.0 |      
+|           29 |                     4.2 |      
+</div>
 
 ## Report issues and request features
 

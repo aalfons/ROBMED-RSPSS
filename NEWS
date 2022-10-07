@@ -1,3 +1,9 @@
+Changes in extension bundle ROBMED version 0.6.0
+
+    + Moved input for seed of the random number generator to main dialog.
+
+
+
 Changes in extension bundle ROBMED version 0.5.0
 
     + Added support for multiple independent variables of interest.
