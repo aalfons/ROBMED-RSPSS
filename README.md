@@ -96,17 +96,16 @@ Additional options can be entered by clicking on the **Options** button.  This o
 
 Each version of `SPSS` requires a specific version of `R` for the `R` plug-in. Starting with `SPSS` version 28.0, `R` and the integration plug-in are automatically installed with `SPSS`. Nevertheless, the table below lists which version of `R` is required for different versions of `SPSS`.
 
-<div style="width:50%; margin:0 auto;">
-| SPSS version | &nbsp; R version &nbsp; |
-| :----------: | :---------------------: |
-|           23 |                     3.1 |      
-|           24 |                     3.2 |      
-|           25 |                     3.3 |      
-|           26 |                     3.5 |      
-|           27 |                     3.6 |      
-|           28 |                     4.0 |      
-|           29 |                     4.2 |      
-</div>
+| `SPSS` version | &nbsp; `R` version &nbsp; |
+| :------------: | :-----------------------: |
+|             23 |                       3.1 |      
+|             24 |                       3.2 |      
+|             25 |                       3.3 |      
+|             26 |                       3.5 |      
+|             27 |                       3.6 |      
+|             28 |                       4.0 |      
+|             29 |                       4.2 |      
+
 
 ## Report issues and request features
 
